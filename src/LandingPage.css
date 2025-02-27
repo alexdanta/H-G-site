@@ -1,0 +1,32 @@
+/* Full-screen container */
+.landing-container {
+    position: flex;
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+}
+
+/* Video styling: covers the screen and stays centered */
+.background-video {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    min-width: 100%;
+    min-height: 100%;
+    width: auto;
+    height: auto;
+    object-fit: cover;
+    z-index: -1;
+}
+
+/* Overlay text styling */
+.overlay {
+    position: absolute;
+    top: 50%;
+    width: 100%;
+    text-align: center;
+    transform: translateY(-50%);
+    color: #fff;
+    padding: 0 1rem;
+}
