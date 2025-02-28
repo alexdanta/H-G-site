@@ -1,13 +1,28 @@
-/* Full-screen container */
-.landing-container {
-    position: flex;
+/* Reset default margins and paddings */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  /* Ensure the body takes up the full viewport height */
+  html, body {
     width: 100%;
+    height: 100%;
+    font-family: Arial, sans-serif;
+    overflow: hidden;
+  }
+  
+  /* Container for the landing page */
+  .landing-container {
+    position: relative;
+    width: 100vw;
     height: 100vh;
     overflow: hidden;
-}
-
-/* Video styling: covers the screen and stays centered */
-.background-video {
+  }
+  
+  /* Styling for the background video */
+  .background-video {
     position: absolute;
     top: 50%;
     left: 50%;
@@ -18,15 +33,68 @@
     height: auto;
     object-fit: cover;
     z-index: -1;
-}
-
-/* Overlay text styling */
-.overlay {
+  }
+  
+  /* Overlay content styling */
+  .overlay {
     position: absolute;
-    top: 50%;
+    top: 0;
+    left: 0;
     width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
     text-align: center;
-    transform: translateY(-50%);
-    color: #fff;
-    padding: 0 1rem;
-}
+    color: white;
+    padding: 20px;
+    background: rgba(0, 0, 0, 0.3); /* Optional: Adds slight dark overlay */
+  }
+  
+  /* Header styling */
+  header h1 {
+    font-size: clamp(2rem, 8vw, 4rem);
+    margin-bottom: 0.5rem;
+  }
+  
+  header p {
+    font-size: clamp(1rem, 4vw, 1.5rem);
+    margin-bottom: 1.5rem;
+  }
+  
+  /* Section styling */
+  section {
+    margin-bottom: 1.5rem;
+  }
+  
+  section h2 {
+    font-size: clamp(1.5rem, 6vw, 2rem);
+    margin-bottom: 1rem;
+  }
+  
+  /* Social links container */
+  .social-links {
+    display: flex;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  
+  /* Social link styling */
+  .social-link {
+    color: white;
+    font-size: clamp(1.5rem, 6vw, 2.5rem);
+    transition: color 0.3s;
+    padding: 0.5rem;
+  }
+  
+  .social-link:hover {
+    color: #ffcc00;
+  }
+  
+  /* Footer styling */
+  footer p {
+    font-size: clamp(0.8rem, 3vw, 1rem);
+    margin-top: 2rem;
+  }
