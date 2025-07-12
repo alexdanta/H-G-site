@@ -1,0 +1,54 @@
+/* Fixed section - replace lines 254-295 in your file */
+
+@media (max-width: 600px) {
+  .loginCard {
+    padding: 30px 20px;
+    margin: 10px;
+    border-radius: 20px;
+  }
+
+  .loginTitle {
+    font-size: 2rem;
+  }
+
+  .loginSubtitle {
+    font-size: 1rem;
+    margin-bottom: 30px;
+  }
+
+  .quickLoginButtons {
+    grid-template-columns: 1fr;
+  }
+
+  .userCard {
+    padding: 20px 12px;
+  }
+
+  .userAvatar {
+    width: 50px;
+    height: 50px;
+    font-size: 1.3rem;
+    margin-bottom: 12px;
+  }
+
+  .userName {
+    font-size: 1.1rem;
+  }
+
+  .userRole {
+    font-size: 0.8rem;
+  }
+
+  .appCount {
+    font-size: 0.75rem;
+    padding: 3px 8px;
+  }
+}
+
+@media (max-width: 400px) {
+  .userGrid {
+    grid-template-columns: 1fr;
+    max-width: 200px;
+    margin: 0 auto 30px;
+  }
+}
