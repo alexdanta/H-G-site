@@ -3,14 +3,14 @@ import { initializeApp } from 'firebase/app';
 import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from 'firebase/auth';
 import { getFirestore, doc, getDoc } from 'firebase/firestore';
 
-// Firebase configuration (using your existing config)
+// Firebase configuration for the SITE
 const firebaseConfig = {
-  apiKey: "AIzaSyAS_7R16Rv9FR3kfhtgGFaL5Rjz7LIN2Yc",
-  authDomain: "family-item-sorter.firebaseapp.com",
-  projectId: "family-item-sorter",
-  storageBucket: "family-item-sorter.firebasestorage.app",
-  messagingSenderId: "287365849681",
-  appId: "1:287365849681:web:b7bd0a8beb185e128c0e70"
+  apiKey: "AIzaSyAvi3Z5GqIQlGMuAy_TZnrDgOFr5ltkdZ4",
+  authDomain: "herbe-george-site.firebaseapp.com",
+  projectId: "herbe-george-site",
+  storageBucket: "herbe-george-site.firebasestorage.app",
+  messagingSenderId: "824809965246",
+  appId: "1:824809965246:web:70305a38f55972e533c0ef"
 };
 
 // Initialize Firebase
@@ -38,9 +38,9 @@ const userProfiles = {
       canManageUsers: true
     }
   },
-  'celestin@herbe-george.com': {
+  'scelestinherbegeorge@gmail.com': {
     uid: 'celestin',
-    email: 'celestin@herbe-george.com',
+    email: 'scelestinherbegeorge@gmail.com',
     displayName: 'Celestin',
     role: 'family',
     avatar: 'C',
@@ -53,9 +53,9 @@ const userProfiles = {
       canManageUsers: false
     }
   },
-  'do-rachelle@herbe-george.com': {
+  'dodorachelle@gmail.com': {
     uid: 'do-rachelle',
-    email: 'do-rachelle@herbe-george.com',
+    email: 'dodorachelle@gmail.com',
     displayName: 'Do-Rachelle',
     role: 'family',
     avatar: 'D',
@@ -75,7 +75,7 @@ const userProfiles = {
     role: 'family',
     avatar: 'L',
     color: 'linear-gradient(135deg, #43e97b, #38f9d7)',
-    apps: ['sorting'],
+    apps: ['sorting', 'analytics', 'admin'], // Laura can access sorting to view
     permissions: {
       canAddItems: false,
       canDeleteItems: false,
@@ -127,35 +127,15 @@ export function AuthProvider({ children }) {
     return () => unsubscribe();
   }, []);
 
-  const login = async (email) => {
+  const login = async (email, password = 'password123') => {
     try {
       setError(null);
       setIsLoading(true);
       
-      // For testing, we'll use a dummy password
-      // In production, you'd implement proper password authentication
-      const dummyPassword = 'password123';
-      
-      const userCredential = await signInWithEmailAndPassword(auth, email, dummyPassword);
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
       return { success: true, user: userCredential.user };
     } catch (error) {
       console.error('Login error:', error);
-      
-      // For development, create the user if they don't exist
-      if (error.code === 'auth/user-not-found' && userProfiles[email]) {
-        try {
-          // In a real app, you'd create the user properly
-          // For now, we'll just set the profile directly
-          const profile = userProfiles[email];
-          setUserProfile(profile);
-          setUser({ email, uid: profile.uid });
-          return { success: true };
-        } catch (createError) {
-          setError('Failed to create user account');
-          return { success: false, error: createError.message };
-        }
-      }
-      
       setError(error.message);
       return { success: false, error: error.message };
     } finally {

@@ -1,5 +1,6 @@
 import React from 'react';
 import { getStatusIndicator } from '../utils/dataUtils.jsx';
+import styles from '../FamilySorter.module.css';
 
 const Dashboard = ({ items = [], currentSort, onSortChange }) => {
     const updateVotingProgress = () => {
@@ -119,13 +120,13 @@ const Dashboard = ({ items = [], currentSort, onSortChange }) => {
 
         const familyVotesHTML = familyMembers.map(member => {
             const vote = item.votes && item.votes[member];
-            const voteClass = vote || 'no-vote';
+            const voteClass = vote || 'noVote';
             const voteIcon = {
                 keep: '💚',
                 charity: '🤝',
                 sell: '💰',
                 trash: '🗑️',
-                'no-vote': '⏳'
+                'noVote': '⏳'
             }[voteClass];
 
             const voteText = {
@@ -133,15 +134,15 @@ const Dashboard = ({ items = [], currentSort, onSortChange }) => {
                 charity: 'Charity',
                 sell: 'Sell',
                 trash: 'Trash',
-                'no-vote': 'No vote yet'
+                'noVote': 'No vote yet'
             }[voteClass];
 
             const memberDisplayName = member.charAt(0).toUpperCase() + member.slice(1).replace('-', '-');
 
             return (
-                <div key={member} className={`family-vote ${voteClass}`}>
+                <div key={member} className={`${styles.familyVote} ${styles[voteClass]}`}>
                     <span>
-                        <span className="vote-icon">{voteIcon}</span>
+                        <span className={styles.voteIcon}>{voteIcon}</span>
                         {memberDisplayName}
                     </span>
                     <span>{voteText}</span>
@@ -150,19 +151,19 @@ const Dashboard = ({ items = [], currentSort, onSortChange }) => {
         });
 
         return (
-            <div key={item.id} className="ranked-item">
-                <img src={item.image} alt={item.description} className="ranked-item-image" />
-                <div className="ranked-item-content">
-                    <div className="ranked-item-header">
-                        <h4 className="ranked-item-title">{item.description}</h4>
-                        <div className={`vote-priority ${priorityClass}`}>{priorityText}</div>
+            <div key={item.id} className={styles.rankedItem}>
+                <img src={item.image || item.primaryImage} alt={item.description} className={styles.rankedItemImage} />
+                <div className={styles.rankedItemContent}>
+                    <div className={styles.rankedItemHeader}>
+                        <h4 className={styles.rankedItemTitle}>{item.description}</h4>
+                        <div className={`${styles.votePriority} ${styles[priorityClass]}`}>{priorityText}</div>
                     </div>
                     {statusIndicator && (
-                        <div className={`status-indicator ${statusIndicator.type}`}>
+                        <div className={`${styles.statusIndicator} ${styles[statusIndicator.type]}`}>
                             {statusIndicator.message}
                         </div>
                     )}
-                    <div className="family-votes-display">
+                    <div className={styles.familyVotesDisplay}>
                         {familyVotesHTML}
                     </div>
                 </div>
@@ -176,84 +177,84 @@ const Dashboard = ({ items = [], currentSort, onSortChange }) => {
     const sortedItems = getSortedItems();
 
     return (
-        <div className="dashboard active">
-            <div className="dashboard-grid">
-                <div className="dashboard-card">
+        <div className={`${styles.dashboard} ${styles.active}`}>
+            <div className={styles.dashboardGrid}>
+                <div className={styles.dashboardCard}>
                     <h3>📊 Voting Progress</h3>
-                    <div className="voting-progress">
+                    <div className={styles.votingProgress}>
                         <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '5px' }}>
                             <span>Items with votes</span>
                             <span>{progress.votedItems}/{progress.totalItems}</span>
                         </div>
-                        <div className="progress-bar">
-                            <div className="progress-fill" style={{ width: `${progress.votedPercentage}%` }}></div>
+                        <div className={styles.progressBar}>
+                            <div className={styles.progressFill} style={{ width: `${progress.votedPercentage}%` }}></div>
                         </div>
                     </div>
-                    <div className="voting-progress">
+                    <div className={styles.votingProgress}>
                         <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '5px' }}>
                             <span>Decided items</span>
                             <span>{progress.decidedItems}/{progress.totalItems}</span>
                         </div>
-                        <div className="progress-bar">
-                            <div className="progress-fill" style={{ width: `${progress.decidedPercentage}%` }}></div>
+                        <div className={styles.progressBar}>
+                            <div className={styles.progressFill} style={{ width: `${progress.decidedPercentage}%` }}></div>
                         </div>
                     </div>
                 </div>
 
-                <div className="dashboard-card">
+                <div className={styles.dashboardCard}>
                     <h3>🎯 Category Breakdown</h3>
-                    <div className="category-breakdown">
-                        <div className="category-stat keep">
-                            <div className="category-number">{categoryBreakdown.keep}</div>
-                            <div className="category-label">Keep</div>
+                    <div className={styles.categoryBreakdown}>
+                        <div className={`${styles.categoryStat} ${styles.keep}`}>
+                            <div className={styles.categoryNumber}>{categoryBreakdown.keep}</div>
+                            <div className={styles.categoryLabel}>Keep</div>
                         </div>
-                        <div className="category-stat charity">
-                            <div className="category-number">{categoryBreakdown.charity}</div>
-                            <div className="category-label">Charity</div>
+                        <div className={`${styles.categoryStat} ${styles.charity}`}>
+                            <div className={styles.categoryNumber}>{categoryBreakdown.charity}</div>
+                            <div className={styles.categoryLabel}>Charity</div>
                         </div>
-                        <div className="category-stat sell">
-                            <div className="category-number">{categoryBreakdown.sell}</div>
-                            <div className="category-label">Sell</div>
+                        <div className={`${styles.categoryStat} ${styles.sell}`}>
+                            <div className={styles.categoryNumber}>{categoryBreakdown.sell}</div>
+                            <div className={styles.categoryLabel}>Sell</div>
                         </div>
-                        <div className="category-stat trash">
-                            <div className="category-number">{categoryBreakdown.trash}</div>
-                            <div className="category-label">Trash</div>
+                        <div className={`${styles.categoryStat} ${styles.trash}`}>
+                            <div className={styles.categoryNumber}>{categoryBreakdown.trash}</div>
+                            <div className={styles.categoryLabel}>Trash</div>
                         </div>
                     </div>
                 </div>
 
-                <div className="dashboard-card">
+                <div className={styles.dashboardCard}>
                     <h3>👥 Family Participation</h3>
                     {familyParticipation.map(member => (
                         <div key={member.member}>
-                            <div className="member-stats">
-                                <div className="member-name">{member.displayName}</div>
-                                <div className="member-votes">{member.memberVotes}/{member.totalItems} votes</div>
+                            <div className={styles.memberStats}>
+                                <div className={styles.memberName}>{member.displayName}</div>
+                                <div className={styles.memberVotes}>{member.memberVotes}/{member.totalItems} votes</div>
                             </div>
-                            <div className="progress-bar" style={{ marginBottom: '15px' }}>
-                                <div className="progress-fill" style={{ width: `${member.percentage}%` }}></div>
+                            <div className={styles.progressBar} style={{ marginBottom: '15px' }}>
+                                <div className={styles.progressFill} style={{ width: `${member.percentage}%` }}></div>
                             </div>
                         </div>
                     ))}
                 </div>
 
-                <div className="dashboard-card">
+                <div className={styles.dashboardCard}>
                     <h3>⚡ Sort Options</h3>
-                    <div className="sort-options">
+                    <div className={styles.sortOptions}>
                         <button
-                            className={`sort-btn ${currentSort === 'votes' ? 'active' : ''}`}
+                            className={`${styles.sortBtn} ${currentSort === 'votes' ? styles.active : ''}`}
                             onClick={() => onSortChange('votes')}
                         >
                             Most Voted First
                         </button>
                         <button
-                            className={`sort-btn ${currentSort === 'recent' ? 'active' : ''}`}
+                            className={`${styles.sortBtn} ${currentSort === 'recent' ? styles.active : ''}`}
                             onClick={() => onSortChange('recent')}
                         >
                             Most Recent First
                         </button>
                         <button
-                            className={`sort-btn ${currentSort === 'conflicts' ? 'active' : ''}`}
+                            className={`${styles.sortBtn} ${currentSort === 'conflicts' ? styles.active : ''}`}
                             onClick={() => onSortChange('conflicts')}
                         >
                             Conflicts First
@@ -262,7 +263,7 @@ const Dashboard = ({ items = [], currentSort, onSortChange }) => {
                 </div>
             </div>
 
-            <div className="dashboard-card">
+            <div className={styles.dashboardCard}>
                 <h3>🏆 Items Ranked by Priority</h3>
                 <p style={{ color: '#6c757d', marginBottom: '20px' }}>
                     Items with the most votes appear first. See who wants what to make family decisions.

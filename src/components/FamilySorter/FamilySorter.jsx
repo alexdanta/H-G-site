@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import LoginScreen from './components/LoginScreen';
+import { useAuth } from '../../contexts/AuthContext'; // Import the site auth
 import Header from './components/Header';
 import Controls from './components/Controls';
 import ItemsGrid from './components/ItemsGrid';
@@ -15,23 +15,42 @@ const FamilySorter = () => {
   const [currentView, setCurrentView] = useState('items');
   const [currentSort, setCurrentSort] = useState('votes');
   const [isLoading, setIsLoading] = useState(true);
+  
+  // Get the logged-in user from site auth
+  const { userProfile } = useAuth();
 
   useEffect(() => {
     loadItems(setItems, setItemIdCounter);
     setIsLoading(false);
   }, []);
 
-  const handleLogin = (userId) => {
-    const user = {
-      id: userId,
-      name: userId.charAt(0).toUpperCase() + userId.slice(1).replace('-', '-'),
-      isAdmin: userId === 'alexander'
-    };
-    setCurrentUser(user);
-  };
+  // Auto-login effect: Map site user to family sorter user
+  useEffect(() => {
+    if (userProfile) {
+      // Map site user emails to family sorter IDs
+      const emailToUserId = {
+        'alexander@herbe-george.com': 'alexander',
+        'scelestinherbegeorge@gmail.com': 'celestin',
+        'dodorachelle@gmail.com': 'do-rachelle',
+        'laura@herbe-george.com': 'laura' // Laura can access but won't be in voting logic
+      };
+
+      const userId = emailToUserId[userProfile.email];
+      
+      if (userId) {
+        const familyUser = {
+          id: userId,
+          name: userProfile.displayName,
+          isAdmin: userProfile.role === 'admin' // Use site role for admin status
+        };
+        setCurrentUser(familyUser);
+      }
+    }
+  }, [userProfile]);
 
   const handleLogout = () => {
-    setCurrentUser(null);
+    // Navigate back to dashboard instead of logging out
+    window.location.href = '/dashboard';
   };
 
   const handleAddItem = async (photoFiles, description) => {
@@ -105,6 +124,23 @@ const FamilySorter = () => {
       const newItems = items.filter(item => item.id !== itemId);
       setItems(newItems);
       saveItems(newItems, itemIdCounter);
+    }
+  };
+
+  const handleResetVotes = () => {
+    if (!currentUser?.isAdmin) {
+      alert('Only Alexander can reset votes.');
+      return;
+    }
+
+    if (confirm('Are you sure you want to reset ALL votes? This cannot be undone.')) {
+      const newItems = items.map(item => ({
+        ...item,
+        votes: {} // Clear all votes
+      }));
+      setItems(newItems);
+      saveItems(newItems, itemIdCounter);
+      alert('All votes have been reset!');
     }
   };
 
@@ -187,10 +223,6 @@ const FamilySorter = () => {
     }
   };
 
-  if (!currentUser) {
-    return <LoginScreen onLogin={handleLogin} styles={styles} />;
-  }
-
   // Show loading while items are being initialized
   if (isLoading) {
     return (
@@ -209,13 +241,36 @@ const FamilySorter = () => {
     );
   }
 
+  // Show error if user not recognized
+  if (!currentUser) {
+    return (
+      <div className={styles.familySorter}>
+        <div style={{ 
+          display: 'flex', 
+          flexDirection: 'column',
+          justifyContent: 'center', 
+          alignItems: 'center', 
+          height: '100vh',
+          fontSize: '1.2rem',
+          color: '#6c757d',
+          textAlign: 'center'
+        }}>
+          <h2>Access Denied</h2>
+          <p>Your account doesn't have access to the Family Sorter.</p>
+          <button onClick={() => window.history.back()}>← Back to Dashboard</button>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className={styles.familySorter}>
       <div className={styles.container}>
         <Header 
           currentUser={currentUser} 
           items={items || []} 
-          onLogout={handleLogout} 
+          onLogout={handleLogout}
+          onResetVotes={handleResetVotes}
         />
         
         <Controls

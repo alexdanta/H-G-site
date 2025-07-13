@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import styles from '../FamilySorter.module.css';
 
 const Controls = ({ currentUser, currentView, currentSort, items = [], onViewChange, onSortChange, onAddItem }) => {
   const [photoFiles, setPhotoFiles] = useState([]);
@@ -42,26 +43,26 @@ const Controls = ({ currentUser, currentView, currentSort, items = [], onViewCha
   };
 
   return (
-    <div className="controls">
-      <div className="view-selector">
+    <div className={styles.controls}>
+      <div className={styles.viewSelector}>
         <button 
-          className={`view-btn ${currentView === 'items' ? 'active' : ''}`}
+          className={`${styles.viewBtn} ${currentView === 'items' ? styles.active : ''}`}
           onClick={() => onViewChange('items')}
         >
           📷 Items View
         </button>
         <button 
-          className={`view-btn ${currentView === 'dashboard' ? 'active' : ''}`}
+          className={`${styles.viewBtn} ${currentView === 'dashboard' ? styles.active : ''}`}
           onClick={() => onViewChange('dashboard')}
         >
-          📊 Dashboard
+          📊 Analytics View
         </button>
       </div>
 
       {currentUser?.isAdmin && (
-        <div className="add-item-section">
-          <div className="mobile-photo-options">
-            <div className="file-input-wrapper">
+        <div className={styles.addItemSection}>
+          <div className={styles.mobilePhotoOptions}>
+            <div className={styles.fileInputWrapper}>
               <input 
                 type="file" 
                 id="photoInput" 
@@ -70,12 +71,12 @@ const Controls = ({ currentUser, currentView, currentSort, items = [], onViewCha
                 multiple
                 onChange={(e) => handlePhotoAdd(e.target.files)}
               />
-              <label htmlFor="photoInput" className="file-input-label camera-btn">
+              <label htmlFor="photoInput" className={`${styles.fileInputLabel} ${styles.cameraBtn}`}>
                 📸 Take Photos
               </label>
             </div>
             
-            <div className="file-input-wrapper">
+            <div className={styles.fileInputWrapper}>
               <input 
                 type="file" 
                 id="galleryInput" 
@@ -83,41 +84,41 @@ const Controls = ({ currentUser, currentView, currentSort, items = [], onViewCha
                 multiple
                 onChange={(e) => handlePhotoAdd(e.target.files)}
               />
-              <label htmlFor="galleryInput" className="file-input-label gallery-btn">
+              <label htmlFor="galleryInput" className={`${styles.fileInputLabel} ${styles.galleryBtn}`}>
                 🖼️ Choose from Gallery
               </label>
             </div>
           </div>
           
           {photoFiles.length > 0 && (
-            <div className="photos-preview">
-              <div className="preview-header">
-                <span className="photo-count">{photoFiles.length} photo{photoFiles.length !== 1 ? 's' : ''} selected</span>
+            <div className={styles.photosPreview}>
+              <div className={styles.previewHeader}>
+                <span className={styles.photoCount}>{photoFiles.length} photo{photoFiles.length !== 1 ? 's' : ''} selected</span>
                 <button 
                   type="button" 
-                  className="clear-all-btn"
+                  className={styles.clearAllBtn}
                   onClick={() => setPhotoFiles([])}
                 >
                   Clear All
                 </button>
               </div>
-              <div className="photos-grid">
+              <div className={styles.photosGrid}>
                 {photoFiles.map((file, index) => (
-                  <div key={index} className="photo-item">
+                  <div key={index} className={styles.photoItem}>
                     <img 
                       src={URL.createObjectURL(file)} 
                       alt={`Preview ${index + 1}`} 
-                      className="preview-image"
+                      className={styles.previewImage}
                     />
                     <button 
                       type="button"
-                      className="remove-photo-btn"
+                      className={styles.removePhotoBtn}
                       onClick={() => removePhoto(index)}
                       title="Remove photo"
                     >
                       ×
                     </button>
-                    <div className="photo-number">{index + 1}</div>
+                    <div className={styles.photoNumber}>{index + 1}</div>
                   </div>
                 ))}
               </div>
@@ -126,14 +127,14 @@ const Controls = ({ currentUser, currentView, currentSort, items = [], onViewCha
           
           <input 
             type="text" 
-            className="description-input"
+            className={styles.descriptionInput}
             placeholder="Item description (e.g., 'Mom's blue ceramic vase from Italy')"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             onKeyPress={handleKeyPress}
           />
           <button 
-            className="add-btn"
+            className={styles.addBtn}
             onClick={handleAddItem}
             disabled={isAdding}
           >
@@ -143,21 +144,21 @@ const Controls = ({ currentUser, currentView, currentSort, items = [], onViewCha
       )}
 
       {currentView === 'dashboard' && (
-        <div className="sort-options">
+        <div className={styles.sortOptions}>
           <button 
-            className={`sort-btn ${currentSort === 'votes' ? 'active' : ''}`}
+            className={`${styles.sortBtn} ${currentSort === 'votes' ? styles.active : ''}`}
             onClick={() => onSortChange('votes')}
           >
             Most Voted First
           </button>
           <button 
-            className={`sort-btn ${currentSort === 'recent' ? 'active' : ''}`}
+            className={`${styles.sortBtn} ${currentSort === 'recent' ? styles.active : ''}`}
             onClick={() => onSortChange('recent')}
           >
             Most Recent First
           </button>
           <button 
-            className={`sort-btn ${currentSort === 'conflicts' ? 'active' : ''}`}
+            className={`${styles.sortBtn} ${currentSort === 'conflicts' ? styles.active : ''}`}
             onClick={() => onSortChange('conflicts')}
           >
             Conflicts First

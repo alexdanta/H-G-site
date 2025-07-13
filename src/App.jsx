@@ -9,13 +9,13 @@ import FamilySorter from './components/FamilySorter/FamilySorter';
 // Protected Route Component
 const ProtectedRoute = ({ children, requiredApp = null }) => {
   const { user, userProfile, hasAccess, isLoading } = useAuth();
-  
+ 
   if (isLoading) {
     return (
-      <div style={{ 
-        display: 'flex', 
-        justifyContent: 'center', 
-        alignItems: 'center', 
+      <div style={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
         height: '100vh',
         fontFamily: 'Segoe UI, Tahoma, Geneva, Verdana, sans-serif'
       }}>
@@ -23,50 +23,50 @@ const ProtectedRoute = ({ children, requiredApp = null }) => {
       </div>
     );
   }
-  
+ 
   if (!user || !userProfile) {
     return <Navigate to="/login" replace />;
   }
-  
+ 
   if (requiredApp && !hasAccess(requiredApp)) {
     return <Navigate to="/dashboard" replace />;
   }
-  
+ 
   return children;
 };
 
 // Main App Routes
 const AppRoutes = () => {
   const { user, userProfile } = useAuth();
-  
+ 
   return (
     <Routes>
-      {/* Public Routes */}
-      <Route path="/" element={!userProfile ? <LandingPage /> : <Navigate to="/dashboard" />} />
+      {/* Public/Home Route - now accessible to all users */}
+      <Route path="/" element={<LandingPage />} />
       <Route path="/login" element={!userProfile ? <SiteLogin /> : <Navigate to="/dashboard" />} />
-      
+     
       {/* Protected Routes */}
-      <Route 
-        path="/dashboard" 
+      <Route
+        path="/dashboard"
         element={
           <ProtectedRoute>
             <UserDashboard />
           </ProtectedRoute>
-        } 
+        }
       />
-      
-      <Route 
-        path="/sorting" 
+     
+      <Route
+        path="/sorting"
         element={
           <ProtectedRoute requiredApp="sorting">
             <FamilySorter />
           </ProtectedRoute>
-        } 
+        }
       />
-      
+     
       {/* Future protected routes */}
-      <Route 
-        path="/analytics" 
+      <Route
+        path="/analytics"
         element={
           <ProtectedRoute requiredApp="analytics">
             <div style={{ padding: '50px', textAlign: 'center', fontFamily: 'Segoe UI' }}>
@@ -74,11 +74,11 @@ const AppRoutes = () => {
               <p>Coming Soon...</p>
             </div>
           </ProtectedRoute>
-        } 
+        }
       />
-      
-      <Route 
-        path="/admin" 
+     
+      <Route
+        path="/admin"
         element={
           <ProtectedRoute requiredApp="admin">
             <div style={{ padding: '50px', textAlign: 'center', fontFamily: 'Segoe UI' }}>
@@ -86,9 +86,9 @@ const AppRoutes = () => {
               <p>Coming Soon...</p>
             </div>
           </ProtectedRoute>
-        } 
+        }
       />
-      
+     
       {/* Catch all route */}
       <Route path="*" element={<Navigate to={userProfile ? "/dashboard" : "/"} replace />} />
     </Routes>

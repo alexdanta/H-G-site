@@ -1,6 +1,7 @@
 import React from 'react';
+import styles from '../FamilySorter.module.css';
 
-const Header = ({ currentUser, items = [], onLogout }) => {
+const Header = ({ currentUser, items = [], onLogout, onResetVotes }) => {
     const totalItems = items.length;
     const votedItems = items.filter(item => Object.keys(item.votes || {}).length > 0).length;
     const decidedItems = items.filter(item => {
@@ -9,39 +10,39 @@ const Header = ({ currentUser, items = [], onLogout }) => {
     }).length;
 
     return (
-        <div className="header">
-            <div className="header-content">
-                <div className="header-left">
+        <div className={styles.header}>
+            <div className={styles.headerContent}>
+                <div className={styles.headerLeft}>
                     <h1>Family Item Sorting</h1>
                     <p>Help decide what to do with each item</p>
                 </div>
-                <div className="header-right">
-                    <div className="user-info">
-                        <div className={`user-avatar ${currentUser.id}`}>
-                            {currentUser.name.charAt(0)}
-                        </div>
-                        <span>{currentUser.name}</span>
-                        {currentUser.isAdmin && (
-                            <span className="admin-badge">ADMIN</span>
-                        )}
-                    </div>
-                    <button className="logout-btn" onClick={onLogout}>
-                        Logout
+                <div className={styles.headerRight}>
+                    {currentUser.isAdmin && (
+                        <button 
+                            className={styles.logoutBtn} 
+                            onClick={onResetVotes}
+                            style={{ marginRight: '10px', background: 'rgba(220, 53, 69, 0.8)' }}
+                        >
+                            🔄 Reset Votes
+                        </button>
+                    )}
+                    <button className={styles.logoutBtn} onClick={onLogout}>
+                        ← Dashboard
                     </button>
                 </div>
             </div>
-            <div className="stats">
-                <div className="stat">
-                    <div className="stat-number">{totalItems}</div>
-                    <div className="stat-label">Total Items</div>
+            <div className={styles.stats}>
+                <div className={styles.stat}>
+                    <div className={styles.statNumber}>{totalItems}</div>
+                    <div className={styles.statLabel}>Total Items</div>
                 </div>
-                <div className="stat">
-                    <div className="stat-number">{votedItems}</div>
-                    <div className="stat-label">Items Voted</div>
+                <div className={styles.stat}>
+                    <div className={styles.statNumber}>{votedItems}</div>
+                    <div className={styles.statLabel}>Items Voted</div>
                 </div>
-                <div className="stat">
-                    <div className="stat-number">{decidedItems}</div>
-                    <div className="stat-label">Decided</div>
+                <div className={styles.stat}>
+                    <div className={styles.statNumber}>{decidedItems}</div>
+                    <div className={styles.statLabel}>Decided</div>
                 </div>
             </div>
         </div>

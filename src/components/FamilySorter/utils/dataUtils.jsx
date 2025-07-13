@@ -1,24 +1,24 @@
-// Firebase v9+ imports and configuration
-import { initializeApp } from 'firebase/app';
+// Firebase v9+ imports - Use ORIGINAL Firebase project for family data
 import { getFirestore, doc, setDoc, getDoc } from 'firebase/firestore';
 import { getStorage } from 'firebase/storage';
+import { initializeApp } from 'firebase/app';
 
-// Your Firebase configuration
-const firebaseConfig = {
-    apiKey: "AIzaSyAS_7R16Rv9FR3kfhtgGFaL5Rjz7LIN2Yc",
-    authDomain: "family-item-sorter.firebaseapp.com",
-    projectId: "family-item-sorter",
-    storageBucket: "family-item-sorter.firebasestorage.app",
-    messagingSenderId: "287365849681",
-    appId: "1:287365849681:web:b7bd0a8beb185e128c0e70"
+// ORIGINAL Firebase config for family data
+const familyFirebaseConfig = {
+  apiKey: "AIzaSyAS_7R16Rv9FR3kfhtgGFaL5Rjz7LIN2Yc",
+  authDomain: "family-item-sorter.firebaseapp.com",
+  projectId: "family-item-sorter",
+  storageBucket: "family-item-sorter.firebasestorage.app",
+  messagingSenderId: "287365849681",
+  appId: "1:287365849681:web:b7bd0a8beb185e128c0e70"
 };
 
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-const storage = getStorage(app);
+// Initialize separate Firebase app for family data
+const familyApp = initializeApp(familyFirebaseConfig, 'family-data-app');
+const db = getFirestore(familyApp);
+const storage = getStorage(familyApp);
 
-console.log('Firebase initialized successfully');
+console.log('Family Firebase services connected successfully');
 
 // Image compression utility
 export const compressImage = (file, maxWidth = 800, quality = 0.8) => {
