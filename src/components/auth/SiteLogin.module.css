@@ -1,0 +1,478 @@
+.loginOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(102, 234, 194, 0.95) 0%,
+    rgba(75, 162, 104, 0.95) 100%
+  );
+  backdrop-filter: blur(10px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  padding: 20px;
+  /* ADDED: Allow scrolling when content is larger than viewport */
+  overflow-y: auto;
+  /* ADDED: Ensure minimum height for small content */
+  min-height: 100vh;
+}
+
+/* Close Button */
+.closeButton {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  width: 44px;
+  height: 44px;
+  background: rgba(255, 255, 255, 0.9);
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  font-weight: bold;
+  color: #2c3e50;
+  z-index: 10000;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  backdrop-filter: blur(10px);
+}
+
+.closeButton:hover {
+  background: rgba(255, 255, 255, 1);
+  transform: scale(1.1);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+}
+
+.closeButton:active {
+  transform: scale(0.95);
+}
+
+.loginContainer {
+  width: 100%;
+  max-width: 480px;
+  animation: fadeInUp 0.6s ease-out;
+  /* ADDED: Ensure container can grow and shrink naturally */
+  flex-shrink: 0;
+  /* ADDED: Center vertically when there's extra space */
+  margin: auto 0;
+}
+
+.loadingContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  color: white;
+  font-size: 1.1rem;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top-color: white;
+  animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.loginCard {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  border-radius: 24px;
+  padding: 40px;
+  box-shadow: 
+    0 20px 40px rgba(0, 0, 0, 0.1),
+    0 0 0 1px rgba(255, 255, 255, 0.2);
+  text-align: center;
+  /* ADDED: Ensure card doesn't get too small */
+  min-height: fit-content;
+}
+
+.loginTitle {
+  font-size: 2.5rem;
+  font-weight: 300;
+  color: #2c3e50;
+  margin-bottom: 8px;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.loginSubtitle {
+  color: #7f8c8d;
+  font-size: 1.1rem;
+  margin-bottom: 40px;
+  font-weight: 400;
+}
+
+.loginForm {
+  margin-bottom: 30px;
+}
+
+.inputGroup {
+  margin-bottom: 25px;
+  text-align: left;
+}
+
+.label {
+  display: block;
+  margin-bottom: 8px;
+  color: #2c3e50;
+  font-weight: 500;
+  font-size: 0.95rem;
+}
+
+.input {
+  width: 100%;
+  padding: 16px 20px;
+  border: 2px solid #e9ecef;
+  border-radius: 12px;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  background: white;
+  color: #333;
+  box-sizing: border-box;
+}
+
+.input:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+  background: white;
+  color: #333;
+}
+
+.input:disabled {
+  background: #f8f9fa;
+  cursor: not-allowed;
+  color: #6c757d;
+}
+
+.input::placeholder {
+  color: #6c757d;
+}
+
+.passwordInputWrapper {
+  position: relative;
+  width: 100%;
+}
+
+.passwordToggle {
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.2rem;
+  color: #6c757d;
+  padding: 5px;
+  border-radius: 4px;
+  transition: all 0.3s ease;
+  z-index: 2;
+}
+
+.passwordToggle:hover {
+  color: #667eea;
+  background: rgba(102, 126, 234, 0.1);
+}
+
+.errorMessage {
+  background: #fee;
+  color: #c53030;
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  font-size: 0.9rem;
+  border: 1px solid #fed7d7;
+}
+
+.loginButton {
+  width: 100%;
+  padding: 16px;
+  background: linear-gradient(135deg, #9466ea, #624ba2);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 8px 16px rgba(102, 126, 234, 0.3);
+}
+
+.loginButton:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 24px rgba(102, 126, 234, 0.4);
+}
+
+.loginButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.divider {
+  margin: 30px 0;
+  position: relative;
+  text-align: center;
+}
+
+.divider::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: #e9ecef;
+}
+
+.divider span {
+  background: rgba(255, 255, 255, 0.95);
+  padding: 0 20px;
+  color: #7f8c8d;
+  font-size: 0.9rem;
+}
+
+.quickLogin {
+  margin-bottom: 30px;
+}
+
+.quickLoginTitle {
+  color: #7f8c8d;
+  font-size: 0.9rem;
+  margin-bottom: 15px;
+}
+
+.quickLoginButtons {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.quickLoginBtn {
+  padding: 12px;
+  background: white;
+  border: 2px solid #e9ecef;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-align: center;
+}
+
+.quickLoginBtn:hover:not(:disabled) {
+  border-color: #667eea;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
+}
+
+.quickLoginBtn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.quickLoginName {
+  display: block;
+  font-weight: 600;
+  color: #2c3e50;
+  font-size: 0.9rem;
+}
+
+.quickLoginRole {
+  display: block;
+  color: #7f8c8d;
+  font-size: 0.8rem;
+  margin-top: 2px;
+}
+
+.loginFooter {
+  border-top: 1px solid rgba(127, 140, 141, 0.2);
+  padding-top: 20px;
+  margin-top: 20px;
+}
+
+.loginFooter p {
+  color: #95a5a6;
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+/* Responsive Design */
+@media (max-width: 600px) {
+  .loginOverlay {
+    /* CHANGED: Reduced padding to give more space */
+    padding: 15px;
+    /* ADDED: Ensure proper alignment on small screens */
+    align-items: flex-start;
+    padding-top: 20px;
+    padding-bottom: 20px;
+  }
+
+  .closeButton {
+    top: 15px;
+    right: 15px;
+    width: 40px;
+    height: 40px;
+    font-size: 16px;
+  }
+
+  .loginContainer {
+    /* ADDED: Reset margin for mobile */
+    margin: 0;
+  }
+
+  .loginCard {
+    padding: 25px 20px; /* REDUCED: Less padding for more space */
+    margin: 0; /* REMOVED: No additional margin */
+    border-radius: 20px;
+  }
+
+  .loginTitle {
+    font-size: 1.8rem; /* REDUCED: Smaller title for mobile */
+  }
+
+  .loginSubtitle {
+    font-size: 1rem;
+    margin-bottom: 25px; /* REDUCED: Less margin */
+  }
+
+  .quickLoginButtons {
+    grid-template-columns: 1fr;
+  }
+  
+  .input {
+    font-size: 1rem; /* CHANGED: Reduced from 1.1rem */
+    padding: 16px 20px; /* CHANGED: Reduced from 18px */
+    background: white !important;
+    color: #333 !important;
+    -webkit-appearance: none;
+    appearance: none;
+  }
+  
+  .input:focus {
+    background: white !important;
+    color: #333 !important;
+  }
+  
+  .input::placeholder {
+    color: #999 !important;
+  }
+  
+  .passwordToggle {
+    font-size: 1.2rem; /* REDUCED: From 1.3rem */
+    padding: 6px; /* REDUCED: From 8px */
+    right: 12px;
+  }
+
+  .inputGroup {
+    margin-bottom: 20px; /* REDUCED: Less spacing between fields */
+  }
+
+  .loginForm {
+    margin-bottom: 25px; /* REDUCED: Less margin */
+  }
+
+  .quickLogin {
+    margin-bottom: 25px; /* REDUCED: Less margin */
+  }
+}
+
+@media (max-width: 480px) {
+  .loginOverlay {
+    padding: 10px;
+    padding-top: 15px;
+    padding-bottom: 15px;
+  }
+
+  .closeButton {
+    top: 12px;
+    right: 12px;
+    width: 36px;
+    height: 36px;
+    font-size: 14px;
+  }
+
+  .loginCard {
+    padding: 20px 15px; /* FURTHER REDUCED: Even less padding */
+  }
+
+  .loginTitle {
+    font-size: 1.6rem; /* FURTHER REDUCED */
+  }
+
+  .loginSubtitle {
+    font-size: 0.9rem;
+    margin-bottom: 20px;
+  }
+  
+  .input {
+    font-size: 1rem; /* KEEP: Same as 600px breakpoint */
+    padding: 16px 18px; /* SLIGHTLY REDUCED: padding */
+    background: white !important;
+    color: #333 !important;
+  }
+
+  .inputGroup {
+    margin-bottom: 18px; /* FURTHER REDUCED */
+  }
+
+  .loginForm {
+    margin-bottom: 20px;
+  }
+
+  .quickLogin {
+    margin-bottom: 20px;
+  }
+
+  .loginFooter {
+    padding-top: 15px;
+    margin-top: 15px;
+  }
+}
+
+@media (max-width: 350px) {
+  .closeButton {
+    top: 10px;
+    right: 10px;
+    width: 32px;
+    height: 32px;
+    font-size: 12px;
+  }
+
+  .loginCard {
+    padding: 15px 12px; /* MINIMAL: For very small screens */
+  }
+
+  .loginTitle {
+    font-size: 1.4rem;
+  }
+
+  .input {
+    padding: 14px 16px;
+  }
+}
