@@ -8,7 +8,19 @@ import ExportButton from './components/ExportButton';
 import { compressImage, saveItems, loadItems } from './utils/dataUtils.jsx';
 import styles from './FamilySorter.module.css';
 
+
+
+
+
 const FamilySorter = () => {
+  const { db } = useAuth();
+  
+  // Initialize Firebase instances for dataUtils
+  useEffect(() => {
+    if (db) {
+      initializeFirebaseInstances(db, null); // null for storage if not needed
+    }
+  }, [db]);
   const [items, setItems] = useState([]);
   const [currentUser, setCurrentUser] = useState(null);
   const [itemIdCounter, setItemIdCounter] = useState(0);

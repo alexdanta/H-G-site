@@ -18,10 +18,13 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
+// Export Firebase instances for dataUtils
+export { db, auth, app };
+
 // Create the context
 const AuthContext = createContext(null);
 
-// User profiles - these would eventually be in Firestore
+// User profiles
 const userProfiles = {
   'alexander@herbe-george.com': {
     uid: 'alexander',
@@ -75,7 +78,7 @@ const userProfiles = {
     role: 'family',
     avatar: 'L',
     color: 'linear-gradient(135deg, #43e97b, #38f9d7)',
-    apps: ['sorting', 'analytics', 'admin'], // Laura can access sorting to view
+    apps: ['sorting', 'analytics', 'admin'],
     permissions: {
       canAddItems: false,
       canDeleteItems: false,
@@ -127,7 +130,7 @@ export function AuthProvider({ children }) {
     return () => unsubscribe();
   }, []);
 
-  const login = async (email, password = 'password123') => {
+  const login = async (email, password) => {
     try {
       setError(null);
       setIsLoading(true);

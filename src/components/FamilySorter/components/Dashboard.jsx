@@ -52,7 +52,7 @@ const Dashboard = ({ items = [], currentSort, onSortChange }) => {
     };
 
     const updateFamilyParticipation = () => {
-        const familyMembers = ['alexander', 'celestin', 'do-rachelle', 'laura'];
+        const familyMembers = ['alexander', 'celestin', 'do-rachelle'];
         const totalItems = items.length;
 
         return familyMembers.map(member => {
@@ -103,7 +103,7 @@ const Dashboard = ({ items = [], currentSort, onSortChange }) => {
 
     const renderRankedItem = (item) => {
         const voteCount = Object.keys(item.votes || {}).length;
-        const familyMembers = ['alexander', 'celestin', 'do-rachelle', 'laura'];
+        const familyMembers = ['alexander ', 'celestin ', 'do-rachelle '];
 
         let priorityClass = 'low';
         let priorityText = `${voteCount}/4 voted`;
@@ -134,7 +134,7 @@ const Dashboard = ({ items = [], currentSort, onSortChange }) => {
                 charity: 'Charity',
                 sell: 'Sell',
                 trash: 'Trash',
-                'noVote': 'No vote yet'
+                'noVote': 'Has not voted yet'
             }[voteClass];
 
             const memberDisplayName = member.charAt(0).toUpperCase() + member.slice(1).replace('-', '-');
