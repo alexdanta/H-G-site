@@ -1,4 +1,4 @@
-/* FamilySorter.module.css - COMPLETE WORKING VERSION */
+/* FamilySorter.module.css - FIXED DELETE BUTTON VERSION */
 
 .familySorter {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -390,10 +390,13 @@
   overflow: hidden;
   transition: all 0.3s ease;
   position: relative;
+  /* FIXED: Add padding to prevent delete button from being cut off during scale */
+  margin: 5px;
 }
 
+/* FIXED: Reduce scale and ensure delete button stays accessible */
 .itemCard:hover {
-  transform: translateY(-5px);
+  transform: translateY(-3px) scale(1.02);
   box-shadow: 0 15px 40px rgba(0,0,0,0.15);
 }
 
@@ -435,6 +438,7 @@
   border-radius: 12px;
   font-size: 0.8rem;
   font-weight: bold;
+  z-index: 5;
 }
 
 .imageThumbnails {
@@ -443,6 +447,7 @@
   right: 8px;
   display: flex;
   gap: 4px;
+  z-index: 5;
 }
 
 .thumbnail {
@@ -577,24 +582,42 @@
   margin-bottom: 5px;
 }
 
+/* FIXED: Delete button positioning and z-index */
 .deleteBtn {
   position: absolute;
-  top: 10px;
-  right: 10px;
-  background: #dc3545;
+  top: 8px;
+  right: 8px;
+  background: rgba(220, 53, 69, 0.9);
   color: white;
   border: none;
   border-radius: 50%;
-  width: 30px;
-  height: 30px;
+  width: 32px;
+  height: 32px;
   cursor: pointer;
-  font-size: 0.8rem;
+  font-size: 1rem;
+  font-weight: bold;
   transition: all 0.3s ease;
+  /* CRITICAL: High z-index to ensure it's always on top */
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
 }
 
 .deleteBtn:hover {
-  background: #c82333;
+  background: #dc3545;
   transform: scale(1.1);
+  box-shadow: 0 4px 12px rgba(220, 53, 69, 0.4);
+}
+
+/* FIXED: Ensure delete button is always clickable even during card hover */
+.itemCard:hover .deleteBtn {
+  /* Keep delete button in fixed position during card scaling */
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  z-index: 1001;
 }
 
 /* Export Button */
@@ -648,6 +671,394 @@
   margin-bottom: 15px;
   color: #333;
   font-size: 1.2rem;
+}
+
+/* NEW: Fullscreen image modal styles */
+.fullscreenOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  cursor: pointer;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.fullscreenModal {
+  position: relative;
+  max-width: 95vw;
+  max-height: 95vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: default;
+}
+
+.fullscreenImage {
+  max-width: 100%;
+  max-height: 85vh;
+  object-fit: contain;
+  border-radius: 8px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+}
+
+.fullscreenCloseBtn {
+  position: absolute;
+  top: -50px;
+  right: 0;
+  background: rgba(255, 255, 255, 0.9);
+  color: #333;
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+  font-size: 1.5rem;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  z-index: 10000;
+}
+
+.fullscreenCloseBtn:hover {
+  background: white;
+  transform: scale(1.1);
+}
+
+.fullscreenCaption {
+  margin-top: 15px;
+  color: white;
+  font-size: 1.1rem;
+  font-weight: 500;
+  text-align: center;
+  background: rgba(0, 0, 0, 0.7);
+  padding: 10px 20px;
+  border-radius: 20px;
+  max-width: 80%;
+}
+
+/* NEW: Fullscreen navigation buttons */
+.fullscreenNavBtn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(0, 0, 0, 0.7);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  cursor: pointer;
+  font-size: 1.5rem;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  z-index: 10001;
+}
+
+.fullscreenNavBtn:hover {
+  background: rgba(0, 0, 0, 0.9);
+  transform: translateY(-50%) scale(1.1);
+}
+
+/* NEW: Fullscreen image counter */
+.fullscreenCounter {
+  position: absolute;
+  top: -50px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.7);
+  color: white;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+/* NEW: Voting priority badge for unvoted items */
+.votingPriorityBadge {
+  background: linear-gradient(135deg, #ff6b6b, #ffa500);
+  color: white;
+  padding: 6px 12px;
+  border-radius: 15px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-align: center;
+  margin-bottom: 10px;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+/* NEW: Subtle highlighting for unvoted items */
+.unvotedItem {
+  border: 2px solid #ffa500;
+  box-shadow: 0 8px 25px rgba(255, 165, 0, 0.2);
+}
+
+.unvotedItem:hover {
+  border-color: #ff6b6b;
+  box-shadow: 0 15px 40px rgba(255, 107, 107, 0.3);
+}
+
+/* ADDED: Progress bar styles for dashboard */
+.votingProgress {
+  margin-bottom: 20px;
+}
+
+.progressBar {
+  width: 100%;
+  height: 8px;
+  background: #e9ecef;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.progressFill {
+  height: 100%;
+  background: linear-gradient(90deg, #4facfe, #00f2fe);
+  transition: width 0.3s ease;
+}
+
+.categoryBreakdown {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 15px;
+}
+
+.categoryStat {
+  text-align: center;
+  padding: 15px;
+  border-radius: 10px;
+  background: #f8f9fa;
+}
+
+.categoryNumber {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.categoryLabel {
+  font-size: 0.9rem;
+  opacity: 0.8;
+}
+
+.categoryStat.keep { 
+  background: rgba(40, 167, 69, 0.1); 
+  color: #28a745; 
+}
+
+.categoryStat.charity { 
+  background: rgba(23, 162, 184, 0.1); 
+  color: #17a2b8; 
+}
+
+.categoryStat.sell { 
+  background: rgba(255, 193, 7, 0.1); 
+  color: #856404; 
+}
+
+.categoryStat.trash { 
+  background: rgba(220, 53, 69, 0.1); 
+  color: #dc3545; 
+}
+
+.memberStats {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.memberName {
+  font-weight: 500;
+}
+
+.memberVotes {
+  font-size: 0.9rem;
+  opacity: 0.8;
+}
+
+.sortOptions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.sortBtn {
+  padding: 12px 16px;
+  border: 2px solid #e9ecef;
+  background: white;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: 500;
+  text-align: left;
+}
+
+.sortBtn:hover {
+  border-color: #007bff;
+  background: rgba(0, 123, 255, 0.05);
+}
+
+.sortBtn.active {
+  background: #007bff;
+  color: white;
+  border-color: #007bff;
+}
+
+.rankedItem {
+  display: flex;
+  gap: 15px;
+  padding: 15px;
+  background: #f8f9fa;
+  border-radius: 10px;
+  margin-bottom: 15px;
+  transition: all 0.3s ease;
+}
+
+.rankedItem:hover {
+  background: #e9ecef;
+  transform: translateY(-2px);
+}
+
+.rankedItemImage {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 8px;
+  flex-shrink: 0;
+}
+
+.rankedItemContent {
+  flex: 1;
+}
+
+.rankedItemHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 10px;
+}
+
+.rankedItemTitle {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.votePriority {
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.votePriority.high {
+  background: #d4edda;
+  color: #155724;
+}
+
+.votePriority.medium {
+  background: #fff3cd;
+  color: #856404;
+}
+
+.votePriority.low {
+  background: #f8d7da;
+  color: #721c24;
+}
+
+.statusIndicator {
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  margin-bottom: 10px;
+}
+
+.statusIndicator.success {
+  background: #d4edda;
+  color: #155724;
+}
+
+.statusIndicator.conflict {
+  background: #f8d7da;
+  color: #721c24;
+}
+
+.statusIndicator.leading {
+  background: #d1ecf1;
+  color: #0c5460;
+}
+
+.statusIndicator.waiting {
+  background: #fff3cd;
+  color: #856404;
+}
+
+.familyVotesDisplay {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.familyVote {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  min-width: 80px;
+}
+
+.familyVote.keep { 
+  background: rgba(40, 167, 69, 0.1); 
+  color: #28a745; 
+}
+
+.familyVote.charity { 
+  background: rgba(23, 162, 184, 0.1); 
+  color: #17a2b8; 
+}
+
+.familyVote.sell { 
+  background: rgba(255, 193, 7, 0.1); 
+  color: #856404; 
+}
+
+.familyVote.trash { 
+  background: rgba(220, 53, 69, 0.1); 
+  color: #dc3545; 
+}
+
+.familyVote.noVote {
+  background: #f8f9fa;
+  color: #6c757d;
+}
+
+.voteIcon {
+  margin-right: 4px;
 }
 
 /* Responsive Design */
@@ -758,6 +1169,112 @@
   .dashboardGrid {
     grid-template-columns: 1fr;
   }
+
+  /* FIXED: Mobile delete button adjustments */
+  .deleteBtn {
+    width: 28px;
+    height: 28px;
+    font-size: 0.9rem;
+  }
+
+  /* Mobile fullscreen adjustments */
+  .fullscreenCloseBtn {
+    top: -40px;
+    width: 35px;
+    height: 35px;
+    font-size: 1.3rem;
+  }
+
+  .fullscreenCaption {
+    font-size: 1rem;
+    margin-top: 10px;
+    padding: 8px 16px;
+  }
+
+  .votingPriorityBadge {
+    font-size: 0.75rem;
+    padding: 5px 10px;
+  }
+
+  /* Mobile fullscreen nav adjustments */
+  .fullscreenNavBtn {
+    width: 40px;
+    height: 40px;
+    font-size: 1.3rem;
+  }
+
+  .fullscreenCounter {
+    font-size: 0.8rem;
+    padding: 6px 12px;
+  }
+}
+
+/* NEW: Add Items Tab Styles */
+.addItemsTab {
+  padding: 30px;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.adminControlsSection {
+  margin-top: 40px;
+  padding: 25px;
+  background: #f8f9fa;
+  border-radius: 15px;
+  border: 2px solid #e9ecef;
+}
+
+.adminControls {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.resetVotesBtn {
+  background: linear-gradient(135deg, #dc3545, #c82333);
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(220, 53, 69, 0.3);
+  align-self: flex-start;
+}
+
+.resetVotesBtn:hover {
+  background: linear-gradient(135deg, #c82333, #bd2130);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(220, 53, 69, 0.4);
+}
+
+.adminInfo {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  border-left: 4px solid #007bff;
+}
+
+/* Sort options when shown in Controls */
+.sortOptionsSection {
+  margin-top: 20px;
+  padding: 20px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.sortOptions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.sortOptions .sortBtn {
+  flex: 1;
+  min-width: 150px;
 }
 
 @media (max-width: 480px) {
@@ -804,5 +1321,14 @@
   .viewBtn {
     padding: 12px 20px;
     font-size: 1rem;
+  }
+
+  /* FIXED: Small screen delete button */
+  .deleteBtn {
+    width: 26px;
+    height: 26px;
+    font-size: 0.8rem;
+    top: 6px;
+    right: 6px;
   }
 }

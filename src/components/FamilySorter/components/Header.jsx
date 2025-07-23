@@ -1,7 +1,7 @@
 import React from 'react';
 import styles from '../FamilySorter.module.css';
 
-const Header = ({ currentUser, items = [], onLogout, onResetVotes }) => {
+const Header = ({ currentUser, items = [], onLogout }) => {
     const totalItems = items.length;
     const votedItems = items.filter(item => Object.keys(item.votes || {}).length > 0).length;
     const decidedItems = items.filter(item => {
@@ -17,15 +17,15 @@ const Header = ({ currentUser, items = [], onLogout, onResetVotes }) => {
                     <p>Help decide what to do with each item</p>
                 </div>
                 <div className={styles.headerRight}>
-                    {currentUser.isAdmin && (
-                        <button 
-                            className={styles.logoutBtn} 
-                            onClick={onResetVotes}
-                            style={{ marginRight: '10px', background: 'rgba(220, 53, 69, 0.8)' }}
-                        >
-                            🔄 Reset Votes
-                        </button>
-                    )}
+                    <div className={styles.userInfo}>
+                        <div className={`${styles.userAvatar} ${styles[currentUser.id]}`}>
+                            {currentUser.name.charAt(0).toUpperCase()}
+                        </div>
+                        <span>{currentUser.name}</span>
+                        {currentUser.isAdmin && (
+                            <span className={styles.adminBadge}>Admin</span>
+                        )}
+                    </div>
                     <button className={styles.logoutBtn} onClick={onLogout}>
                         ← Dashboard
                     </button>

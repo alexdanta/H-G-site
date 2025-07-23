@@ -1,14 +1,28 @@
 import React from 'react';
-import { getStatusIndicator } from '../utils/dataUtils.jsx';
 import styles from '../FamilySorter.module.css';
+import { getStatusIndicator } from '../utils/dataUtils'; // Import the correct function
 
 const Dashboard = ({ items = [], currentSort, onSortChange }) => {
+    // UPDATED: Exclude Laura from all analytics
+    const activeVoters = ['alexander', 'celestin', 'do-rachelle']; // Laura removed
+    const totalActiveVoters = activeVoters.length; // Now 3 instead of 4
+
+    // REMOVED: Built-in status indicator function - now using the one from dataUtils.jsx
+
     const updateVotingProgress = () => {
         const totalItems = items.length;
-        const votedItems = items.filter(item => Object.keys(item.votes || {}).length > 0).length;
+        // Only count votes from active voters (exclude Laura)
+        const votedItems = items.filter(item => {
+            const activeVotes = Object.keys(item.votes || {}).filter(userId => activeVoters.includes(userId));
+            return activeVotes.length > 0;
+        }).length;
+        
         const decidedItems = items.filter(item => {
-            const votes = Object.values(item.votes || {});
-            return votes.length > 0 && votes.every(v => v === votes[0]);
+            // Only consider votes from active voters
+            const activeVotes = Object.entries(item.votes || {})
+                .filter(([userId]) => activeVoters.includes(userId))
+                .map(([, vote]) => vote);
+            return activeVotes.length > 0 && activeVotes.every(v => v === activeVotes[0]);
         }).length;
 
         const votedPercentage = totalItems > 0 ? (votedItems / totalItems) * 100 : 0;
@@ -32,10 +46,14 @@ const Dashboard = ({ items = [], currentSort, onSortChange }) => {
         };
 
         items.forEach(item => {
-            const votes = Object.values(item.votes || {});
-            if (votes.length > 0) {
+            // Only consider votes from active voters (exclude Laura)
+            const activeVotes = Object.entries(item.votes || {})
+                .filter(([userId]) => activeVoters.includes(userId))
+                .map(([, vote]) => vote);
+                
+            if (activeVotes.length > 0) {
                 const voteCount = {};
-                votes.forEach(vote => {
+                activeVotes.forEach(vote => {
                     voteCount[vote] = (voteCount[vote] || 0) + 1;
                 });
                 const leadingVote = Object.entries(voteCount).reduce((a, b) =>
@@ -52,10 +70,10 @@ const Dashboard = ({ items = [], currentSort, onSortChange }) => {
     };
 
     const updateFamilyParticipation = () => {
-        const familyMembers = ['alexander', 'celestin', 'do-rachelle'];
         const totalItems = items.length;
 
-        return familyMembers.map(member => {
+        // UPDATED: Only show active voters (exclude Laura)
+        return activeVoters.map(member => {
             const memberVotes = items.filter(item => item.votes && item.votes[member]).length;
             const percentage = totalItems > 0 ? (memberVotes / totalItems) * 100 : 0;
             const displayName = member.charAt(0).toUpperCase() + member.slice(1).replace('-', '-');
@@ -75,8 +93,9 @@ const Dashboard = ({ items = [], currentSort, onSortChange }) => {
 
         if (currentSort === 'votes') {
             sortedItems.sort((a, b) => {
-                const aVotes = Object.keys(a.votes).length;
-                const bVotes = Object.keys(b.votes).length;
+                // Only count votes from active voters
+                const aVotes = Object.keys(a.votes || {}).filter(userId => activeVoters.includes(userId)).length;
+                const bVotes = Object.keys(b.votes || {}).filter(userId => activeVoters.includes(userId)).length;
                 return bVotes - aVotes;
             });
         } else if (currentSort === 'recent') {
@@ -87,7 +106,10 @@ const Dashboard = ({ items = [], currentSort, onSortChange }) => {
                 const bConflict = hasConflict(b);
                 if (aConflict && !bConflict) return -1;
                 if (!aConflict && bConflict) return 1;
-                return Object.keys(b.votes).length - Object.keys(a.votes).length;
+                // Only count active voter votes
+                const aActiveVotes = Object.keys(a.votes || {}).filter(userId => activeVoters.includes(userId)).length;
+                const bActiveVotes = Object.keys(b.votes || {}).filter(userId => activeVoters.includes(userId)).length;
+                return bActiveVotes - aActiveVotes;
             });
         }
 
@@ -95,30 +117,34 @@ const Dashboard = ({ items = [], currentSort, onSortChange }) => {
     };
 
     const hasConflict = (item) => {
-        const votes = Object.values(item.votes);
-        if (votes.length < 2) return false;
-        const voteSet = new Set(votes);
+        // Only consider active voters for conflicts
+        const activeVotes = Object.entries(item.votes || {})
+            .filter(([userId]) => activeVoters.includes(userId))
+            .map(([, vote]) => vote);
+        if (activeVotes.length < 2) return false;
+        const voteSet = new Set(activeVotes);
         return voteSet.size > 1;
     };
 
     const renderRankedItem = (item) => {
-        const voteCount = Object.keys(item.votes || {}).length;
-        const familyMembers = ['alexander ', 'celestin ', 'do-rachelle '];
+        // Only count votes from active voters (exclude Laura)
+        const activeVoteCount = Object.keys(item.votes || {}).filter(userId => activeVoters.includes(userId)).length;
 
         let priorityClass = 'low';
-        let priorityText = `${voteCount}/4 voted`;
+        let priorityText = `${activeVoteCount}/${totalActiveVoters} voted`; // Now shows x/3
 
-        if (voteCount === 4) {
+        if (activeVoteCount === totalActiveVoters) {
             priorityClass = 'high';
             priorityText = 'All voted';
-        } else if (voteCount >= 2) {
+        } else if (activeVoteCount >= 2) {
             priorityClass = 'medium';
-            priorityText = `${voteCount}/4 voted`;
+            priorityText = `${activeVoteCount}/${totalActiveVoters} voted`;
         }
 
-        const statusIndicator = getStatusIndicator(item);
+        const statusIndicator = getStatusIndicator(item); // Now using the correct function from dataUtils.jsx
 
-        const familyVotesHTML = familyMembers.map(member => {
+        // FIXED: Only show active voters (exclude Laura completely)
+        const familyVotesHTML = activeVoters.map(member => {
             const vote = item.votes && item.votes[member];
             const voteClass = vote || 'noVote';
             const voteIcon = {
@@ -130,11 +156,11 @@ const Dashboard = ({ items = [], currentSort, onSortChange }) => {
             }[voteClass];
 
             const voteText = {
-                keep: 'Keep',
-                charity: 'Charity',
-                sell: 'Sell',
-                trash: 'Trash',
-                'noVote': 'Has not voted yet'
+                keep: ' Keep',
+                charity: ' Charity',
+                sell: ' Sell',
+                trash: ' Trash',
+                'noVote': ' Not voted yet'
             }[voteClass];
 
             const memberDisplayName = member.charAt(0).toUpperCase() + member.slice(1).replace('-', '-');
