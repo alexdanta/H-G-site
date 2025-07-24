@@ -4,7 +4,7 @@ import Header from './components/Header';
 import Controls from './components/Controls';
 import ItemsGrid from './components/ItemsGrid';
 import Dashboard from './components/Dashboard';
-import AddItemsTab from './components/addItemsTab';
+import AddItemsTab from './components/addItemsTab.jsx';
 import ContentManagementTab from './components/ContentManagementTab';
 import ExportButton from './components/ExportButton';
 import { compressImage, saveItem, loadItems, updateItem, deleteItem, resetAllVotes } from './utils/dataUtils.jsx';
